@@ -92,7 +92,7 @@ class RahejaModel():
 
 
         max_utterance_len = self.metadata['max_utterance_len']
-        max_word_len = 27# self.metadata['max_word_len']
+        max_word_len = self.metadata['max_word_len']
         vocabulary_size = self.metadata['vocabulary_size']
         num_da_tags = self.metadata['num_da_tags']
 
@@ -135,10 +135,10 @@ class RahejaModel():
         dialogue_input = concatenate([dialogue_input_word, dialogue_input_char])
         model_input = [dialogue_input_word, dialogue_input_char]
 
-        output_utterance_bigru =TimeDistributed(model1)(dialogue_input)
+        output_utterance_bilstm =TimeDistributed(model1)(dialogue_input)
 
         utterance_att_vec, utt_att_vec_coeff = CSAttention(metadata= self.metadata, hu_utterance = self.hidden_layers_utterance, hu_dialogue = 2*self.hidden_layers_utterance,
-                                                                hu_fc = 2*self.hidden_layers_utterance, return_coefficients=True)(output_utterance_bigru)
+                                                                hu_fc = 2*self.hidden_layers_utterance, return_coefficients=True)(output_utterance_bilstm)
 
         LSTM_dialogue = LSTM(self.hidden_layers_dialogue, dropout=self.dialogue_dropout_rate, recurrent_dropout=self.dialogue_recurrent_dropout, return_sequences=True) 
         utterance_bilstm = Bidirectional(LSTM_dialogue)(utterance_att_vec)
